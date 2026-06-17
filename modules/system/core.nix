@@ -8,10 +8,16 @@
   # ── Networking ─────────────────────────────────────────────────────
   networking.networkmanager.enable = true;
 
-  # ── Locale / time (change to taste) ────────────────────────────────
-  time.timeZone = "Europe/London";
-  i18n.defaultLocale = "en_GB.UTF-8";
-  console.keyMap = "uk";
+  # ── Locale / time ──────────────────────────────────────────────────
+  # Timezone auto-set from your IP (great for travelling). Runs on boot and
+  # when the network comes up; force it anytime with `sudo tzupdate`. In a VM
+  # this beats geoclue (no Wi-Fi/GPS to scan). Don't also set time.timeZone.
+  services.tzupdate.enable = true;
+
+  # Locale is a personal preference, not location — keep it Australian so your
+  # date/number formats don't change as you travel.
+  i18n.defaultLocale = "en_AU.UTF-8";
+  console.keyMap = "us";
 
   # ── Fonts (mirrors your Mac) ───────────────────────────────────────
   fonts.packages = with pkgs; [
