@@ -5,4 +5,5 @@
   #   - automatic display resize when you resize the VM window
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
+  services.openssh.enable = true;
 }
