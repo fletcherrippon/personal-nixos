@@ -1,0 +1,39 @@
+;; ──────────────────────────────────────────────────────────────
+;; Your first EWW widget. Two files matter:
+;;   eww.yuck  → structure + data (this file)
+;;   eww.scss  → styling
+;; After editing either, run:  eww reload
+;; ──────────────────────────────────────────────────────────────
+
+;; VARIABLES ─────────────────────────────────────────────────────
+;; defpoll runs a shell command every <interval> and stores the result.
+(defpoll clock_time :interval "5s"  `date '+%H:%M'`)
+(defpoll clock_date :interval "60s" `date '+%a %d %b'`)
+;; EWW_CPU and EWW_RAM are built-in "magic" variables — always available.
+
+;; A REUSABLE WIDGET ─────────────────────────────────────────────
+;; defwidget = your own component (think a function / React component).
+(defwidget metric [label value]
+  (box :class "metric" :orientation "v" :space-evenly false :spacing 4
+    (box :orientation "h" :space-evenly false
+      (label :class "metric-label" :text label)
+      (label :class "metric-val" :hexpand true :halign "end" :text "${value}%"))
+    (scale :class "metric-bar" :value value :min 0 :max 100 :active false)))
+
+;; THE CARD ──────────────────────────────────────────────────────
+(defwidget card []
+  (box :class "card" :orientation "v" :space-evenly false :spacing 14
+    (box :class "clock" :orientation "v" :space-evenly false
+      (label :class "time" :text clock_time)
+      (label :class "date" :text clock_date))
+    (metric :label "CPU" :value {round(EWW_CPU.avg, 0)})
+    (metric :label "RAM" :value {round(EWW_RAM.used_mem_perc, 0)})))
+
+;; THE WINDOW ────────────────────────────────────────────────────
+;; Floating + non-exclusive: it doesn't reserve screen space, so it
+;; won't fight waybar. Open/close it with `eww open --toggle sidecard`.
+(defwindow sidecard
+  :monitor 0
+  :geometry (geometry :x "20px" :y "20px" :anchor "bottom right" :width "230px")
+  :stacking "fg"
+  (card))

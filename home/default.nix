@@ -35,6 +35,11 @@ in {
     zed-editor           # your editor
     firefox              # ARM-native browser (Zen is x86_64-only on Linux)
     nautilus             # file manager (Super+E)
+
+    # Widget toolkit for custom bars/widgets. Wayland build required.
+    # If the rebuild errors that `withWayland` is unexpected, newer nixpkgs
+    # ships the Wayland build by default — just use `eww` on its own.
+    (eww.override { withWayland = true; })
   ];
 
   # ── Live-editable, version-controlled rice configs ─────────────────
@@ -46,5 +51,6 @@ in {
     "waybar".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/waybar";
     "fuzzel".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/fuzzel";
     "mako".source   = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/mako";
+    "eww".source    = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/eww";
   };
 }
