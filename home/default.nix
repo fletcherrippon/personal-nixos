@@ -5,7 +5,7 @@ let
   # no rebuild needed). If you put the repo elsewhere, change this one line.
   dotfiles = "${config.home.homeDirectory}/personal-nixos/home/dotfiles";
 in {
-  imports = [ ./apps/shell.nix ];
+  imports = [ ./apps/shell.nix ./apps/theme.nix ];
 
   home.username = "fletcher";
   home.homeDirectory = "/home/fletcher";
@@ -51,5 +51,6 @@ in {
     "fuzzel".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/fuzzel";
     "mako".source   = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/mako";
     "eww".source    = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/eww";
+    "theme".source  = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/theme";
   };
 }

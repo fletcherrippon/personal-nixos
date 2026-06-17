@@ -1,20 +1,14 @@
-// Catppuccin Mocha palette
-$base:    #1e1e2e;
-$text:    #cdd6f4;
-$subtext: #a6adc8;
-$blue:    #89b4fa;
-$surface: #313244;
+@import "theme";  // colours + sizes from ~/.config/theme/theme.conf (run `theme`)
 
-// Reset GTK defaults, then set a base font.
 * {
   all: unset;
-  font-family: "JetBrainsMono Nerd Font";
+  font-family: $font;
 }
 
 .card {
-  background-color: rgba(30, 30, 46, 0.85);
-  border: 1px solid $surface;
-  border-radius: 16px;
+  background-color: $bg;
+  border: $border solid $surface;
+  border-radius: $radius;
   padding: 18px;
   color: $text;
 }
@@ -27,18 +21,7 @@ $surface: #313244;
 
 // A GtkScale is made of trough > highlight > slider nodes.
 .metric-bar {
-  trough {
-    background-color: $surface;
-    border-radius: 8px;
-    min-height: 8px;
-  }
-  highlight {
-    background-color: $blue;
-    border-radius: 8px;
-  }
-  slider {
-    background-color: transparent;
-    min-width: 0;
-    min-height: 0;
-  }
+  trough    { background-color: $surface; border-radius: 8px; min-height: 8px; }
+  highlight { background-color: $accent;  border-radius: 8px; }
+  slider    { background-color: transparent; min-width: 0; min-height: 0; }
 }
