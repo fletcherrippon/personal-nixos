@@ -4,13 +4,16 @@
   hardware.graphics.enable = true;
 
   # ── Hyprland (the compositor itself; everything else is in home/) ──
-  programs.hyprland.enable = true;
+  programs.hyprland = {
+    enable = true;
+    withUWSM = true;   # launch via UWSM so systemd graphical-session + portals set up correctly
+  };
 
   # ── Login screen: greetd + tuigreet (tiny, DIY-friendly) ───────────
   services.greetd = {
     enable = true;
     settings.default_session = {
-      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd Hyprland";
+      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd start-hyprland";
       user = "greeter";
     };
   };
