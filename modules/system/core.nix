@@ -27,7 +27,7 @@
   ];
 
   # ── A couple of always-there CLI tools ─────────────────────────────
-  environment.systemPackages = with pkgs; [ git vim wget ];
+  environment.systemPackages = with pkgs; [ git vim wget tzupdate ];
 
   # ── Compressed RAM swap (smoother under memory pressure) ───────────
   # Trades a little CPU (fast on M3) to avoid slow disk swap stalls.
