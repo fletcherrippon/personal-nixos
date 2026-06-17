@@ -36,10 +36,9 @@ in {
     firefox              # ARM-native browser (Zen is x86_64-only on Linux)
     nautilus             # file manager (Super+E)
 
-    # Widget toolkit for custom bars/widgets. Wayland build required.
-    # If the rebuild errors that `withWayland` is unexpected, newer nixpkgs
-    # ships the Wayland build by default — just use `eww` on its own.
-    (eww.override { withWayland = true; })
+    # Widget toolkit for custom bars/widgets. Current nixpkgs eww ships with
+    # Wayland support built in, so no override is needed.
+    eww
   ];
 
   # ── Live-editable, version-controlled rice configs ─────────────────
