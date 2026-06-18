@@ -8,8 +8,8 @@
 (defpoll clock_time :interval "10s"   `date '+%H:%M'`)
 (defpoll clock_date :interval "3600s" `date '+%d %B'`)
 ;; activeworkspace -> {"id": N, ...}; EWW parses JSON, so use ws.id.
-(defpoll ws :interval "0.02s" :initial '[{"id": 1}]' `hyprctl workspaces -j`)
-(defpoll aws :interval "0.2s" :initial '{"id": 1}' `hyprctl activeworkspace -j`)
+(defpoll ws :interval "0.1s" :initial '[{"id": 1}]' `hyprctl workspaces -j`)
+(defpoll aws :interval "0.1s" :initial '{"id": 1}' `hyprctl activeworkspace -j`)
 
 ;; ── Bar modules ─────────────────────────────────────────────────
 (defwidget launcher []
