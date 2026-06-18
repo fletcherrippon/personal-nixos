@@ -1,12 +1,9 @@
+# VM host. The shared base comes from hosts/common.nix (added by the flake).
 { ... }:
 {
   imports = [
-    ./hardware-configuration.nix          # generated inside the VM (see file)
-    ../../modules/system/core.nix         # nix, boot, locale, networking, fonts
-    ../../modules/system/desktop.nix      # Hyprland, greeter, portals, graphics
-    ../../modules/system/audio.nix        # PipeWire
-    ../../modules/system/vm-guest.nix     # clipboard + display auto-resize
-    ../../modules/system/users.nix        # your user account
+    ./hardware-configuration.nix     # generated inside the VM
+    ../../modules/system/vm.nix      # VM-only: guest tools + GL workaround
   ];
 
   networking.hostName = "nixos-vm";

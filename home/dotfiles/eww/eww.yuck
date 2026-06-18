@@ -23,7 +23,7 @@
 (defwidget apps []
   (box :class "module apps" :space-evenly false :spacing 12
     (button :class "app" :onclick "firefox &" "")
-    (button :class "app" :onclick "env LIBGL_ALWAYS_SOFTWARE=1 ghostty &" "")
+    (button :class "app" :onclick "term &" "")
     (button :class "app" :onclick "discord &" "")))
 
 (defwidget clock []

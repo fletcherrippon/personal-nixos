@@ -1,11 +1,15 @@
-{ config, pkgs, ... }:
+{ config, pkgs, isVM, ... }:
 let
-  # Where this repo lives INSIDE the VM. Clone it to exactly this path so the
+  # Where this repo lives on the machine. Clone it to exactly this path so the
   # "out of store" symlinks below resolve to editable files (edit + reload,
-  # no rebuild needed). If you put the repo elsewhere, change this one line.
+  # no rebuild needed). Same path on the VM and the Framework.
   dotfiles = "${config.home.homeDirectory}/personal-nixos/home/dotfiles";
 in {
-  imports = [ ./apps/shell.nix ./apps/theme.nix ];
+  imports = [
+    ./apps/shell.nix
+    ./apps/theme.nix
+    ./apps/term.nix     # host-aware `term` command (software GL only on the VM)
+  ];
 
   home.username = "fletcher";
   home.homeDirectory = "/home/fletcher";
@@ -14,7 +18,7 @@ in {
   # ── The desktop you assemble yourself ──────────────────────────────
   home.packages = with pkgs; [
     # Wayland desktop pieces
-    waybar               # status bar (top of screen)
+    waybar               # status bar (currently unused; eww bar is active)
     fuzzel               # app launcher (Super+R)
     mako                 # notification popups
     swaybg               # wallpaper (solid colour by default)
@@ -26,25 +30,22 @@ in {
     wl-clipboard         # wl-copy / wl-paste
     cliphist             # clipboard history (Super+.)
     playerctl            # media keys
-    brightnessctl        # (no-op in a VM, handy on real hardware)
+    brightnessctl        # backlight (real on the Framework; no-op in the VM)
     networkmanagerapplet # nm-applet tray icon
     pavucontrol          # audio mixer GUI
 
     # Apps
-    ghostty              # your terminal
+    ghostty              # your terminal (launched via the `term` wrapper)
     zed-editor           # your editor
-    firefox              # ARM-native browser (Zen is x86_64-only on Linux)
+    firefox              # browser
     nautilus             # file manager (Super+E)
 
-    # Widget toolkit for custom bars/widgets. Current nixpkgs eww ships with
-    # Wayland support built in, so no override is needed.
-    eww
+    eww                  # widget toolkit for the custom bar
   ];
 
   # ── Live-editable, version-controlled rice configs ─────────────────
   # mkOutOfStoreSymlink points ~/.config/<app> at the REAL files in this repo,
-  # so you can edit them and run `hyprctl reload` to see changes instantly,
-  # while still keeping everything tracked in git.
+  # so you can edit them and reload to see changes instantly.
   xdg.configFile = {
     "hypr".source   = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/hypr";
     "waybar".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/waybar";
@@ -52,5 +53,20 @@ in {
     "mako".source   = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/mako";
     "eww".source    = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/eww";
     "theme".source  = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/theme";
+
+    # Per-host Hyprland fragment (sourced by hyprland.conf). It lives OUTSIDE
+    # the symlinked hypr dir so Nix can generate it differently per host.
+    "hypr-host/host.conf".text =
+      if isVM then ''
+        # ── VM-only Hyprland tweaks ──────────────────────────────
+        # virgl has no usable hardware cursor; pin the resolution.
+        cursor {
+            no_hardware_cursors = true
+        }
+        monitor = , 1800x1169@60, auto, 1
+      '' else ''
+        # ── Native hardware ──────────────────────────────────────
+        monitor = , preferred, auto, 1
+      '';
   };
 }

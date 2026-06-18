@@ -7,6 +7,7 @@
 
   # ── Networking ─────────────────────────────────────────────────────
   networking.networkmanager.enable = true;
+  services.openssh.enable = true;   # paste-over-SSH on the VM; handy on the laptop too
 
   # ── Locale / time ──────────────────────────────────────────────────
   # Timezone auto-set from your IP (great for travelling). Runs on boot and
