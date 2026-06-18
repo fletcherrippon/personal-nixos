@@ -1,4 +1,4 @@
-{ config, pkgs, isVM, ... }:
+{ config, pkgs, lib, isVM, ... }:
 let
   # Where this repo lives on the machine. Clone it to exactly this path so the
   # "out of store" symlinks below resolve to editable files (edit + reload,
@@ -69,4 +69,11 @@ in {
         monitor = , preferred, auto, 1
       '';
   };
+
+  # Regenerate the (gitignored) theme fragments on every rebuild, so they always
+  # exist and match theme.conf. Fresh clones and new hosts just work, and `theme`
+  # still does live updates between rebuilds.
+  home.activation.generateTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    bash "$HOME/.config/theme/apply.sh" || true
+  '';
 }
