@@ -19,7 +19,7 @@
   (box :class "module workspaces" :space-evenly false :spacing 4
     (for i in ws
       (button :class {aws.id == i.id ? "ws active" : "ws"}
-              :onclick "hyprctl dispatch workspace ${i}" ""))))
+              :onclick "hyprctl dispatch workspace ${i.id}" ""))))
 
 (defwidget apps []
   (box :class "module apps" :space-evenly false :spacing 12
