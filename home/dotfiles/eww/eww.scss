@@ -1,72 +1,117 @@
-@import "theme";  // colours + sizes from theme.conf (run `theme`)
+@import "theme"; // colours + sizes from theme.conf (run `theme`)
 
 // NOTE: keep comments ASCII-only. Non-ASCII in a /* */ comment makes Sass emit
 // `@charset "UTF-8";`, which GTK's CSS parser rejects. Use // (stripped) instead.
 
 * {
-  all: unset;
-  font-family: $font;
-  font-size: 14px;
+	all: unset;
+	font-family: $font;
+	font-size: 14px;
 }
 
 // Top bar
 .bar {
-  background-color: $bg;
-  color: $text;
-  padding: 0 12px;
+	background-color: $bg;
+	color: $text;
+	padding: 0 12px;
 }
 
-.module { padding: 0 6px; }
+.module {
+	padding: 0 6px;
+}
 
 .logo {
-  color: $accent;
-  font-size: 18px;
-  padding: 0 8px;
+	color: $accent;
+	font-size: 18px;
+	padding: 0 8px;
 }
 
 .workspaces .ws {
-  background-color: $surface;
-  border-radius: $radius;
-  min-width: 22px;
-  min-height: 6px;
-  margin: 0 2px;
-}
-.workspaces .ws.active {
-  background-color: $accent;
-  min-width: 34px;
+	background-color: $surface;
+	border-radius: $radius;
+	min-width: 22px;
+	min-height: 6px;
+	margin: 0 2px;
+
+	&.active {
+		background-color: $accent;
+		min-width: 34px;
+	}
 }
 
 .apps .app {
-  color: $subtext;
-  font-size: 16px;
-  padding: 0 4px;
-}
-.apps .app:hover { color: $text; }
+	color: $subtext;
+	font-size: 16px;
+	padding: 0 4px;
 
-.clock .time { color: $text; font-weight: bold; }
-.clock .date { color: $subtext; }
+	&:hover {
+		color: $text;
+	}
+}
+
+.clock {
+	.time {
+		color: $text;
+		font-weight: bold;
+	}
+
+	.date {
+		color: $subtext;
+	}
+}
 
 .power {
-  color: $red;
-  font-size: 15px;
-  padding: 0 6px;
+	color: $red;
+	font-size: 15px;
+	padding: 0 6px;
+
+	&:hover {
+		color: $text;
+	}
 }
-.power:hover { color: $text; }
 
 // Info card (toggle: Super+grave)
 .card {
-  background-color: $bg;
-  border: $border solid $surface;
-  border-radius: 16px;
-  padding: 18px;
-  color: $text;
+	background-color: $bg;
+	border: $border solid $surface;
+	border-radius: 16px;
+	padding: 18px;
+	color: $text;
+
+	.big-time {
+		font-size: 30px;
+		font-weight: bold;
+	}
+
+	.date {
+		font-size: 13px;
+		color: $subtext;
+	}
 }
-.card .big-time { font-size: 30px; font-weight: bold; }
-.card .date { font-size: 13px; color: $subtext; }
-.metric-label { font-size: 13px; color: $subtext; }
-.metric-val   { font-size: 13px; color: $text; }
+
+.metric-label {
+	font-size: 13px;
+	color: $subtext;
+}
+
+.metric-val {
+	font-size: 13px;
+	color: $text;
+}
+
 .metric-bar {
-  trough    { background-color: $surface; border-radius: 8px; min-height: 8px; }
-  highlight { background-color: $accent;  border-radius: 8px; }
-  slider    { background-color: transparent; min-width: 0; min-height: 0; }
+	trough {
+		background-color: $surface;
+		border-radius: 8px;
+		min-height: 8px;
+	}
+	highlight {
+		background-color: $accent;
+		border-radius: 8px;
+	}
+	slider {
+		background-color: transparent;
+		min-width: 0;
+		min-height: 0;
+	}
 }
