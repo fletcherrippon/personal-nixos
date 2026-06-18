@@ -15,4 +15,4 @@
 @define-color teal #94e2d5;
 @define-color accent #89b4fa;
 @define-color accent2 #cba6f7;
-@define-color bg #1e1e2ed8;
+@define-color bg rgba(30, 30, 46, 0.85);
