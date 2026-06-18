@@ -71,10 +71,5 @@ in {
       '';
   };
 
-  # Regenerate the (gitignored) theme fragments on every rebuild, so they always
-  # exist and match theme.conf. Fresh clones and new hosts just work, and `theme`
-  # still does live updates between rebuilds.
-  home.activation.generateTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    bash "$HOME/.config/theme/apply.sh" || true
-  '';
+  # (theme regeneration on rebuild lives in apps/theme.nix, beside the binary)
 }

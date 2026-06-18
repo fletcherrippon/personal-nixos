@@ -12,3 +12,6 @@ home/dotfiles/mako/config
 
 # home-manager backups
 *.bak
+
+# Rust build output
+/pkgs/theme/target/
