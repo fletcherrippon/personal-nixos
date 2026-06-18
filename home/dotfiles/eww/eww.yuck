@@ -8,7 +8,7 @@
 (defpoll clock_time :interval "10s"   `date '+%H:%M'`)
 (defpoll clock_date :interval "3600s" `date '+%d %B'`)
 ;; activeworkspace -> {"id": N, ...}; EWW parses JSON, so use ws.id.
-(defpoll ws :interval "0.2s" :initial "{\"id\": 1}" `hyprctl activeworkspace -j`)
+(defpoll ws :interval "0.2s" :initial '{"id": 1}' `hyprctl activeworkspace -j`)
 
 ;; ── Bar modules ─────────────────────────────────────────────────
 (defwidget launcher []
@@ -23,7 +23,7 @@
 (defwidget apps []
   (box :class "module apps" :space-evenly false :spacing 12
     (button :class "app" :onclick "firefox &" "")
-    (button :class "app" :onclick "ghostty &" "")
+    (button :class "app" :onclick "env LIBGL_ALWAYS_SOFTWARE=1 ghostty &" "")
     (button :class "app" :onclick "discord &" "")))
 
 (defwidget clock []
