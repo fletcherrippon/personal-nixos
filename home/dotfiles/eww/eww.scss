@@ -1,12 +1,15 @@
 @import "theme";  // colours + sizes from theme.conf (run `theme`)
 
+// NOTE: keep comments ASCII-only. Non-ASCII in a /* */ comment makes Sass emit
+// `@charset "UTF-8";`, which GTK's CSS parser rejects. Use // (stripped) instead.
+
 * {
   all: unset;
   font-family: $font;
   font-size: 14px;
 }
 
-/* ─── Top bar ─────────────────────────────────────────── */
+// Top bar
 .bar {
   background-color: $bg;
   color: $text;
@@ -50,7 +53,7 @@
 }
 .power:hover { color: $text; }
 
-/* ─── Info card (toggle: Super+`) ─────────────────────── */
+// Info card (toggle: Super+grave)
 .card {
   background-color: $bg;
   border: $border solid $surface;
