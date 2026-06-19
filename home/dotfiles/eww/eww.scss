@@ -32,7 +32,7 @@
 	max-width: 22px;
 	height: 4px;
 	margin: 0 2px;
-	transition: width 600ms;
+	transition: max-width 600ms;
 
 	&.active {
 		background-color: $accent;
