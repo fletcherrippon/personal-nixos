@@ -21,6 +21,15 @@ in
   home.homeDirectory = "/home/fletcher";
   home.stateVersion = "26.05";
 
+  home.pointerCursor = {
+    name = "Bibata-Modern-Ice";
+    package = pkgs.bibata-cursors;
+    size = 24;
+
+    gtk.enable = true;
+    x11.enable = true;
+  };
+
   # ── The desktop you assemble yourself ──────────────────────────────
   home.packages = with pkgs; [
     # Wayland desktop pieces

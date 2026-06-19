@@ -3,18 +3,6 @@
   # ── GPU / graphics (virtio-gpu-gl / virgl) ─────────────────────────
   hardware.graphics.enable = true;
 
-  # ── GPU / graphics (virtio-gpu-gl / virgl) ─────────────────────────
-
-  home.pointerCursor = {
-    name = "Bibata-Modern-Ice"; # You can also use "Bibata-Original-Ice"
-    package = pkgs.bibata-cursors;
-    size = 24;
-
-    # Automatically set the cursor theme for GTK and X11/Wayland
-    gtk.enable = true;
-    x11.enable = true;
-  };
-
   # ── Hyprland (the compositor itself; everything else is in home/) ──
   programs.hyprland = {
     enable = true;
