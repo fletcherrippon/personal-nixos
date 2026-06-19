@@ -1,8 +1,8 @@
-(include "./launcher.yuck")
-(include "./workspaces.yuck")
-(include "./apps.yuck")
-(include "./clock.yuck")
-(include "./power.yuck")
+(include "./bar/launcher.yuck")
+(include "./bar/workspaces.yuck")
+(include "./bar/apps.yuck")
+(include "./bar/clock.yuck")
+(include "./bar/power.yuck")
 
 (defwidget bar []
   (centerbox :class "bar"
