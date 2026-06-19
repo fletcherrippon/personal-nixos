@@ -16,7 +16,7 @@
   (button :class "module logo" :onclick "fuzzel &" ""))
 
 (defwidget workspaces []
-  (box :class "module workspaces" :space-evenly false :spacing 4
+  (box :class "module workspaces" :valign "center" :space-evenly false :spacing 4
     (for i in ws
       (button :class {aws.id == i.id ? "ws active" : "ws"}
               :onclick "hyprctl dispatch workspace ${i.id}" ""))))
