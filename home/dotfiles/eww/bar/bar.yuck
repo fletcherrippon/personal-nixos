@@ -1,0 +1,13 @@
+(include "./launcher.yuck")
+(include "./workspaces.yuck")
+(include "./apps.yuck")
+(include "./clock.yuck")
+(include "./power.yuck")
+
+(defwidget bar []
+  (centerbox :class "bar"
+    (box :halign "start" :valign "center" :space-evenly false :spacing 10
+      (launcher) (workspaces) (apps))
+    (box)
+    (box :halign "end" :valign "center" :space-evenly false :spacing 10
+      (clock) (power))))

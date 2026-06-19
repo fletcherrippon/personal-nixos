@@ -4,46 +4,10 @@
 ;; Edit, then:  eww reload
 ;; ════════════════════════════════════════════════════════════════
 
-;; ── Data sources ────────────────────────────────────────────────
-(defpoll clock_time :interval "10s"   `date '+%H:%M'`)
-(defpoll clock_date :interval "3600s" `date '+%d %B'`)
-;; activeworkspace -> {"id": N, ...}; EWW parses JSON, so use ws.id.
-(defpoll ws :interval "0.1s" :initial '[{"id": 1}]' `hyprctl workspaces -j`)
-(defpoll aws :interval "0.1s" :initial '{"id": 1}' `hyprctl activeworkspace -j`)
-
-;; ── Bar modules ─────────────────────────────────────────────────
-(defwidget launcher []
-  (button :class "module logo" :onclick "fuzzel &" ""))
-
-(defwidget workspaces []
-  (box :class "module workspaces" :valign "center" :space-evenly false :spacing 4
-    (for i in ws
-      (button :class {aws.id == i.id ? "ws active" : "ws"}
-              :valign "center"
-              :onclick "hyprctl dispatch workspace ${i.id}" ""))))
-
-(defwidget apps []
-  (box :class "module apps" :space-evenly false :spacing 12
-    (button :class "app" :onclick "firefox &" "")
-    (button :class "app" :onclick "term &" "")
-    (button :class "app" :onclick "discord &" "")))
-
-(defwidget clock []
-  (box :class "module clock" :space-evenly false :spacing 8
-    (label :class "time" :text clock_time)
-    (label :class "date" :text clock_date)))
-
-(defwidget power []
-  (button :class "module power" :onclick "hyprctl dispatch exit" ""))
+(include "./bar/bar.yuck")
 
 ;; ── Bar layout (start | center | end) ───────────────────────────
-(defwidget bar []
-  (centerbox :class "bar"
-    (box :halign "start" :valign "center" :space-evenly false :spacing 10
-      (launcher) (workspaces) (apps))
-    (box)
-    (box :halign "end" :valign "center" :space-evenly false :spacing 10
-      (clock) (power))))
+(bar)
 
 ;; ── Info card (toggle: Super+`) ─────────────────────────────────
 (defwidget metric [label value]

@@ -1,0 +1,9 @@
+(defpoll ws :interval "0.1s" :initial '[{"id": 1}]' `hyprctl workspaces -j`)
+(defpoll aws :interval "0.1s" :initial '{"id": 1}' `hyprctl activeworkspace -j`)
+
+(defwidget workspaces []
+  (box :class "module workspaces" :valign "center" :space-evenly false :spacing 4
+    (for i in ws
+      (button :class {aws.id == i.id ? "ws active" : "ws"}
+              :valign "center"
+              :onclick "hyprctl dispatch workspace ${i.id}" ""))))

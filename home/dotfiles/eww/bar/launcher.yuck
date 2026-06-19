@@ -1,0 +1,2 @@
+(defwidget launcher []
+  (button :class "module logo nf-linux-nixos" :onclick "fuzzel &" "\uf313"))
