@@ -26,23 +26,20 @@
 	padding: 0 8px;
 }
 
-.workspaces {
-	padding: 6px 0;
+.workspaces .ws {
+	background-color: $surface;
+	border-radius: $radius-full;
+	min-width: 18px;
+	min-height: 4px;
+	margin: 6px 2px;
+	transition: min-width 300ms ease;
 
-	.ws {
-		background-color: $surface;
-		border-radius: $radius-full;
-		min-width: 18px;
-		min-height: 4px;
-		margin: 0 2px;
-		transition: min-width 300ms ease;
-
-		&.active {
-			background-color: $accent;
-			min-width: 42px;
-		}
+	&.active {
+		background-color: $accent;
+		min-width: 42px;
 	}
 }
+
 .apps .app {
 	color: $subtext;
 	font-size: 16px;
