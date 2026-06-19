@@ -6,9 +6,6 @@
 
 (include "./bar/bar.yuck")
 
-;; ── Bar layout (start | center | end) ───────────────────────────
-(bar)
-
 ;; ── Info card (toggle: Super+`) ─────────────────────────────────
 (defwidget metric [label value]
   (box :class "metric" :orientation "v" :space-evenly false :spacing 4
