@@ -81,7 +81,7 @@ in
           cursor {
               no_hardware_cursors = true
           }
-          monitor = , 3024x1964@60, auto, 1.68
+          monitor = , 1800x1169@60, auto, 1
         ''
       else
         ''
