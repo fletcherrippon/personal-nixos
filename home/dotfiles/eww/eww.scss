@@ -31,7 +31,7 @@
 	border-radius: $radius-full;
 	min-width: 18px;
 	min-height: 4px;
-	margin: 6px 2px;
+	margin: 0 6px;
 	transition: min-width 300ms ease;
 
 	&.active {
