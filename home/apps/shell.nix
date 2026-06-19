@@ -13,9 +13,9 @@
 
   programs.git = {
     enable = true;
-    userName = "Fletcher Rippon";
-    userEmail = "hello@fletcherrippon.com";
-    extraConfig = {
+    settings = {
+      user.name = "Fletcher Rippon";
+      user.email = "hello@fletcherrippon.com";
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
     };

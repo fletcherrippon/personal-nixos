@@ -21,7 +21,7 @@ in {
     waybar               # status bar (currently unused; eww bar is active)
     fuzzel               # app launcher (Super+R)
     mako                 # notification popups
-    swww                 # wallpaper daemon (image wallpapers; CPU-based, VM-safe)
+    awww                 # wallpaper daemon (swww renamed; CPU-based, VM-safe)
     lutgen               # recolours a wallpaper to match the palette
     hyprlock             # lock screen
     hypridle             # auto-lock / screen-off when idle

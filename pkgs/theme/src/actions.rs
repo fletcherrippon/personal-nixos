@@ -4,7 +4,7 @@ use crate::util::expand;
 use crate::value::Value;
 use std::{path::Path, process::Command};
 
-/// Recolour the source wallpaper to the palette (lutgen) and set it (swww).
+/// Recolour the source wallpaper to the palette (lutgen) and set it (awww).
 /// Falls back to a solid `base` colour when no wallpaper is configured.
 pub fn set_wallpaper(vars: &[(String, Value)], home: &str) {
     let wall = vars.iter().find_map(|(k, v)| match (k.as_str(), v) {
@@ -23,7 +23,7 @@ pub fn set_wallpaper(vars: &[(String, Value)], home: &str) {
                 .map(|s| s.success())
                 .unwrap_or(false);
             if ok {
-                Command::new("swww")
+                Command::new("awww")
                     .args(["img", out.as_str(), "--transition-type", "fade"])
                     .status()
                     .ok();
@@ -33,7 +33,7 @@ pub fn set_wallpaper(vars: &[(String, Value)], home: &str) {
         }
         _ => {
             if let Some(hex) = vars.iter().find(|(k, _)| k == "base").and_then(|(_, v)| v.hex()) {
-                Command::new("swww")
+                Command::new("awww")
                     .args(["clear", hex.trim_start_matches('#')])
                     .status()
                     .ok();
