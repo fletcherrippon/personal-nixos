@@ -32,7 +32,7 @@
 	min-width: 22px;
 	min-height: 4px;
 	margin: 0 2px;
-	transition: min-width 250ms;
+	transition: min-width 300ms ease;
 
 	&.active {
 		background-color: $accent;
