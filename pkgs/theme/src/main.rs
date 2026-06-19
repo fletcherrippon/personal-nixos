@@ -1,170 +1,107 @@
-//! `theme` — a generic, template-driven theme generator.
+//! `theme` — generate per-tool theme files from a typed config (no templates).
 //!
-//! It reads ~/.config/theme/theme.conf (key=value) and renders every template
-//! in ~/.config/theme/templates/ to the path each declares, then recolours the
-//! wallpaper (lutgen + swww) and reloads. There is NOTHING tool-specific in this
-//! file — adding a variable or a whole new tool means editing theme.conf and a
-//! template, never this code.
+//! Modules:
+//!   config   — parse theme.conf into typed (name, value) pairs
+//!   value    — the Value type and per-tool rendering
+//!   generate — produce each tool's file
+//!   actions  — wallpaper + reload side effects
+//!   util     — path/fs helpers
 //!
-//! Template format:
-//!   First line:   @out <path>            destination (supports leading ~)
-//!   Body:         {{ key }}              raw value from theme.conf
-//!                 {{ key.hex }}          #rrggbb
-//!                 {{ key.rgb }}          rgb(rrggbb)         (hyprland)
-//!                 {{ key.rgba }}         rgba(r,g,b,opacity) (GTK3, no #RRGGBBAA)
-//!                 {{ key.alpha }}        rrggbbAA            (fuzzel)
+//! Usage:
+//!   theme [CONFIG] [--out DIR] [--eww-out P] [--waybar-out P] [--hypr-out P]
+//!         [--fuzzel-out P] [--mako-out P] [--no-reload]
+//!   theme CONFIG DIR           # positional: config + output dir
 
-use std::collections::HashMap;
-use std::{env, fs, path::Path, process::Command};
+mod actions;
+mod config;
+mod generate;
+mod util;
+mod value;
+
+use std::{env, fs};
+use util::{expand, write_file};
+use value::Format;
 
 fn main() {
-    let home = env::var("HOME").expect("HOME not set");
-    let cfg = env::var("XDG_CONFIG_HOME").unwrap_or_else(|_| format!("{home}/.config"));
-    let theme_dir = format!("{cfg}/theme");
+    let home = env::var("HOME").unwrap_or_default();
+    let cfgdir = env::var("XDG_CONFIG_HOME").unwrap_or_else(|_| format!("{home}/.config"));
+    let args: Vec<String> = env::args().skip(1).collect();
 
-    let conf = fs::read_to_string(format!("{theme_dir}/theme.conf"))
-        .expect("cannot read theme.conf");
-    let t: HashMap<String, String> = conf.lines().filter_map(parse_line).collect();
-    let opacity: u32 = t.get("opacity").and_then(|s| s.parse().ok()).unwrap_or(100);
+    // ---- arg parsing (std only) ----
+    let mut config: Option<String> = None;
+    let mut out_dir: Option<String> = None;
+    let mut no_reload = false;
+    let mut outs: [Option<String>; 5] = [None, None, None, None, None];
+    let flags = ["--eww-out", "--waybar-out", "--hypr-out", "--fuzzel-out", "--mako-out"];
+    let mut positional: Vec<String> = Vec::new();
 
-    // Render every template to its declared @out path.
-    let tmpl_dir = format!("{theme_dir}/templates");
-    match fs::read_dir(&tmpl_dir) {
-        Ok(entries) => {
-            for entry in entries.flatten() {
-                let path = entry.path();
-                if !path.is_file() {
-                    continue;
-                }
-                match fs::read_to_string(&path) {
-                    Ok(raw) => render_template(&raw, &t, opacity, &home),
-                    Err(e) => eprintln!("  ! read {}: {e}", path.display()),
-                }
-            }
+    let mut i = 0;
+    while i < args.len() {
+        let a = args[i].as_str();
+        if a == "--config" {
+            i += 1;
+            config = args.get(i).cloned();
+        } else if a == "--out" {
+            i += 1;
+            out_dir = args.get(i).cloned();
+        } else if a == "--no-reload" {
+            no_reload = true;
+        } else if let Some(idx) = flags.iter().position(|f| *f == a) {
+            i += 1;
+            outs[idx] = args.get(i).cloned();
+        } else if a.starts_with("--") {
+            eprintln!("unknown flag: {a}");
+        } else {
+            positional.push(a.to_string());
         }
-        Err(e) => eprintln!("  ! no templates dir ({tmpl_dir}): {e}"),
+        i += 1;
     }
-
-    set_wallpaper(&t, &home);
-    reload();
-    println!("\u{2713} theme applied");
-}
-
-fn parse_line(line: &str) -> Option<(String, String)> {
-    let line = line.trim();
-    if line.is_empty() || line.starts_with('#') {
-        return None;
+    if config.is_none() {
+        config = positional.first().cloned();
     }
-    let (k, v) = line.split_once('=')?;
-    Some((k.trim().to_string(), v.trim().to_string()))
-}
+    if out_dir.is_none() && positional.len() >= 2 {
+        out_dir = Some(positional[1].clone());
+    }
+    let config = config.unwrap_or_else(|| format!("{cfgdir}/theme/theme.conf"));
 
-/// First line `@out <path>` is the destination; the rest is rendered + written.
-fn render_template(raw: &str, t: &HashMap<String, String>, opacity: u32, home: &str) {
-    let mut lines = raw.lines();
-    let out = match lines.next().and_then(|l| l.strip_prefix("@out ")) {
-        Some(p) => p.trim().replacen('~', home, 1),
-        None => {
-            eprintln!("  ! template missing `@out <path>` first line");
-            return;
+    // ---- resolve outputs: per-tool flag > --out DIR > built-in default ----
+    let defaults = [
+        format!("{cfgdir}/eww/_theme.scss"),
+        format!("{cfgdir}/waybar/colors.css"),
+        format!("{cfgdir}/hypr/conf.d/00-theme.conf"),
+        format!("{cfgdir}/fuzzel/fuzzel.ini"),
+        format!("{cfgdir}/mako/config"),
+    ];
+    let dir_names = ["eww.scss", "waybar.css", "hypr.conf", "fuzzel.ini", "mako.conf"];
+    let dest = |idx: usize| -> String {
+        if let Some(p) = &outs[idx] {
+            expand(p, &home)
+        } else if let Some(d) = &out_dir {
+            format!("{}/{}", expand(d, &home), dir_names[idx])
+        } else {
+            defaults[idx].clone()
         }
     };
-    let body = lines.collect::<Vec<_>>().join("\n");
-    let rendered = substitute(&body, t, opacity);
-    if let Err(e) = fs::write(&out, format!("{rendered}\n")) {
-        eprintln!("  ! write {out}: {e}");
-    }
-}
 
-/// Replace every `{{ key[.fmt] }}` with the formatted theme value.
-fn substitute(body: &str, t: &HashMap<String, String>, opacity: u32) -> String {
-    let mut out = String::new();
-    let mut rest = body;
-    while let Some(i) = rest.find("{{") {
-        out.push_str(&rest[..i]);
-        let after = &rest[i + 2..];
-        match after.find("}}") {
-            Some(j) => {
-                out.push_str(&format_expr(after[..j].trim(), t, opacity));
-                rest = &after[j + 2..];
-            }
-            None => {
-                out.push_str("{{");
-                rest = after;
-            }
+    // ---- parse + generate ----
+    let text = match fs::read_to_string(expand(&config, &home)) {
+        Ok(t) => t,
+        Err(e) => {
+            eprintln!("cannot read {config}: {e}");
+            std::process::exit(1);
         }
+    };
+    let vars = config::parse(&text);
+
+    write_file(&dest(0), &generate::vars(&vars, Format::Scss));
+    write_file(&dest(1), &generate::vars(&vars, Format::GtkCss));
+    write_file(&dest(2), &generate::vars(&vars, Format::Hypr));
+    write_file(&dest(3), &generate::fuzzel(&vars));
+    write_file(&dest(4), &generate::mako(&vars));
+
+    if !no_reload {
+        actions::set_wallpaper(&vars, &home);
+        actions::reload();
     }
-    out.push_str(rest);
-    out
-}
-
-fn format_expr(expr: &str, t: &HashMap<String, String>, opacity: u32) -> String {
-    let (key, fmt) = expr.split_once('.').unwrap_or((expr, ""));
-    let v = t.get(key).cloned().unwrap_or_default();
-    match fmt {
-        "" => v,
-        "hex" => format!("#{v}"),
-        "rgb" => format!("rgb({v})"),
-        "rgba" => {
-            let (r, g, b) = hex_rgb(&v);
-            let a = if opacity >= 100 {
-                "1".to_string()
-            } else {
-                format!("0.{:02}", opacity)
-            };
-            format!("rgba({r}, {g}, {b}, {a})")
-        }
-        "alpha" => format!("{v}{:02x}", opacity * 255 / 100),
-        other => {
-            eprintln!("  ! unknown format '.{other}' on {{{{{expr}}}}}");
-            v
-        }
-    }
-}
-
-fn set_wallpaper(t: &HashMap<String, String>, home: &str) {
-    let wall = t
-        .get("wallpaper")
-        .cloned()
-        .unwrap_or_default()
-        .replacen('~', home, 1);
-
-    if !wall.is_empty() && Path::new(&wall).exists() {
-        let out = format!("{home}/.cache/wallpaper.png");
-        // Palette = every value that is a 6-digit hex colour (no hardcoded list).
-        let palette: Vec<String> = t
-            .values()
-            .filter(|v| v.len() == 6 && v.chars().all(|c| c.is_ascii_hexdigit()))
-            .map(|v| format!("#{v}"))
-            .collect();
-        let ok = Command::new("lutgen")
-            .args(["apply", "--preserve", wall.as_str(), "-o", out.as_str(), "--"])
-            .args(&palette)
-            .status()
-            .map(|s| s.success())
-            .unwrap_or(false);
-        if ok {
-            Command::new("swww")
-                .args(["img", out.as_str(), "--transition-type", "fade"])
-                .status()
-                .ok();
-        } else {
-            eprintln!("  ! lutgen failed -- check `lutgen apply --help`");
-        }
-    } else if let Some(base) = t.get("base") {
-        Command::new("swww").args(["clear", base.as_str()]).status().ok();
-    }
-}
-
-fn reload() {
-    Command::new("eww").args(["reload"]).status().ok();
-    Command::new("hyprctl").args(["reload"]).status().ok();
-    Command::new("makoctl").args(["reload"]).status().ok();
-    Command::new("pkill").args(["-SIGUSR2", "waybar"]).status().ok();
-}
-
-/// Parse "rrggbb" (optionally '#'-prefixed) into (r, g, b).
-fn hex_rgb(hex: &str) -> (u8, u8, u8) {
-    let n = u32::from_str_radix(hex.trim_start_matches('#'), 16).unwrap_or(0);
-    ((n >> 16) as u8, (n >> 8) as u8, n as u8)
+    println!("\u{2713} theme generated");
 }
