@@ -29,14 +29,14 @@
 .workspaces .ws {
 	background-color: $surface;
 	border-radius: $radius-full;
-	width: 22px;
+	max-width: 22px;
 	height: 4px;
 	margin: 0 2px;
 	transition: width 600ms;
 
 	&.active {
 		background-color: $accent;
-		width: 34px;
+		max-width: 34px;
 	}
 }
 
