@@ -27,9 +27,9 @@
 }
 
 .workspaces {
-	padding: 6px 0;
+	padding: 4px 0;
 
-	ws {
+	.ws {
 		background-color: $surface;
 		border-radius: $radius-full;
 		min-width: 18px;
@@ -43,7 +43,6 @@
 		}
 	}
 }
-
 .apps .app {
 	color: $subtext;
 	font-size: 16px;
