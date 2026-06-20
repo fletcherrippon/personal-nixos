@@ -81,11 +81,12 @@ in
           cursor {
               no_hardware_cursors = true
           }
-          # Follow the UTM window size (keep UTM "Resize display to window size
-          # automatically" ON, no letterboxing). With UTM "Retina Mode" ON the
-          # guest gets a 2x-density framebuffer, so render at scale 2 for crisp
-          # HiDPI text. (Retina OFF? use scale 1.)
-          monitor = , preferred, auto, 2
+          # Framebuffer is forced to 1920x1200 by the kernel `video=` param
+          # (see modules/system/vm.nix) because UTM's SPICE auto-resize is
+          # broken. scale 1.5 -> 1280x800 logical (1920/1.5 is a whole number,
+          # which Hyprland requires for fractional scales). Keep UTM
+          # "Resize display to window size automatically" OFF.
+          monitor = Virtual-1, 1920x1200, auto, 1.5
         ''
       else
         ''
