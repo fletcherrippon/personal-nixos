@@ -81,9 +81,11 @@ in
           cursor {
               no_hardware_cursors = true
           }
-          # Follow the UTM window size 1:1 (keep UTM "Resize display to window
-          # size automatically" ON) so it stays sharp with no letterboxing.
-          monitor = , preferred, auto, 1
+          # Follow the UTM window size (keep UTM "Resize display to window size
+          # automatically" ON, no letterboxing). With UTM "Retina Mode" ON the
+          # guest gets a 2x-density framebuffer, so render at scale 2 for crisp
+          # HiDPI text. (Retina OFF? use scale 1.)
+          monitor = , preferred, auto, 2
         ''
       else
         ''
