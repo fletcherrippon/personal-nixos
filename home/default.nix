@@ -21,11 +21,11 @@ in
   home.homeDirectory = "/home/fletcher";
   home.stateVersion = "26.05";
 
+  # System cursor — themes GTK, X/XWayland, and Hyprland (via XCURSOR_* env).
   home.pointerCursor = {
     name = "Bibata-Modern-Ice";
     package = pkgs.bibata-cursors;
     size = 24;
-
     gtk.enable = true;
     x11.enable = true;
   };
@@ -77,11 +77,13 @@ in
       if isVM then
         ''
           # ── VM-only Hyprland tweaks ──────────────────────────────
-          # virgl has no usable hardware cursor; pin the resolution.
+          # virgl has no usable hardware cursor.
           cursor {
               no_hardware_cursors = true
           }
-          monitor = , 1800x1169@60, auto, 1
+          # Follow the UTM window size 1:1 (keep UTM "Resize display to window
+          # size automatically" ON) so it stays sharp with no letterboxing.
+          monitor = , preferred, auto, 1
         ''
       else
         ''
