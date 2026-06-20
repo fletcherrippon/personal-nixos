@@ -81,12 +81,13 @@ in
           cursor {
               no_hardware_cursors = true
           }
-          # Framebuffer is forced to 1920x1200 by the kernel `video=` param
+          # Framebuffer is forced to 2560x1600 by the kernel `video=` param
           # (see modules/system/vm.nix) because UTM's SPICE auto-resize is
-          # broken. scale 1.5 -> 1280x800 logical (1920/1.5 is a whole number,
-          # which Hyprland requires for fractional scales). Keep UTM
-          # "Resize display to window size automatically" OFF.
-          monitor = Virtual-1, 1920x1200, auto, 1.5
+          # broken. A high framebuffer (>= the Mac panel's pixels) means UTM
+          # downscales instead of upscaling -> sharp. scale 2 -> 1280x800
+          # logical (2560/2 and 1600/2 are whole numbers). Keep UTM "Resize
+          # display to window size automatically" OFF.
+          monitor = Virtual-1, 2560x1600, auto, 2
         ''
       else
         ''

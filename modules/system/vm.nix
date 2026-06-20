@@ -16,5 +16,5 @@
   # resizes AND in-guest mode-sets. `video=` runs at kernel init, underneath
   # SPICE, so it can size the scanout when nothing else can. Pair with UTM
   # "Resize display to window size automatically" OFF so SPICE can't re-assert.
-  boot.kernelParams = [ "video=Virtual-1:1920x1200" ];
+  boot.kernelParams = [ "video=Virtual-1:2560x1600" ];
 }
