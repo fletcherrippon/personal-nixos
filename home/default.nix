@@ -84,10 +84,10 @@ in
           # Framebuffer is forced to 2560x1600 by the kernel `video=` param
           # (see modules/system/vm.nix) because UTM's SPICE auto-resize is
           # broken. A high framebuffer (>= the Mac panel's pixels) means UTM
-          # downscales instead of upscaling -> sharp. scale 2 -> 1280x800
-          # logical (2560/2 and 1600/2 are whole numbers). Keep UTM "Resize
-          # display to window size automatically" OFF.
-          monitor = Virtual-1, 2560x1600, auto, 2
+          # downscales instead of upscaling -> sharp. scale 1 -> 2560x1600
+          # logical: 1:1 pixel sizes (16px font renders as 16px), small/sharp
+          # UI. Keep UTM "Resize display to window size automatically" OFF.
+          monitor = Virtual-1, 2560x1600, auto, 1
         ''
       else
         ''
