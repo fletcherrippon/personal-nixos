@@ -1,14 +1,14 @@
-;; Build a continuous 1..max range so gaps are visible: real workspaces are
-;; tagged occupied:true, the in-between ones occupied:false. That way the dots'
-;; positions match the actual workspace numbers (4th dot = workspace 4).
-(defpoll ws :interval "0.1s" :initial '[{"id":1,"occupied":true}]'
-  `hyprctl workspaces -j | jq -c '[.[].id|select(.>0)] as $ids|(($ids|max)//1) as $m|[range(1;$m+1) as $i|{id:$i,occupied:(($ids|index($i))!=null)}]'`)
-(defpoll aws :interval "0.1s" :initial '{"id": 1}' `hyprctl activeworkspace -j`)
+;; Event-driven (not polled): scripts/workspaces.sh listens on Hyprland's IPC
+;; socket and emits the gap-filled list only when something changes. Each item
+;; is { id, occupied, active } so this one var drives both the dots and the
+;; active highlight (no separate activeworkspace poll).
+(deflisten ws :initial '[{"id":1,"occupied":true,"active":true}]'
+  `bash $HOME/.config/eww/scripts/workspaces.sh`)
 
 (defwidget workspaces []
   (box :class "module workspaces" :valign "center" :space-evenly false :spacing 4
     (for i in ws
       (eventbox :cursor "pointer"
-        (button :class {aws.id == i.id ? "ws active" : (i.occupied ? "ws" : "ws empty")}
+        (button :class {i.active ? "ws active" : (i.occupied ? "ws" : "ws empty")}
                 :valign "center"
                 :onclick "hyprctl dispatch workspace ${i.id}" "")))))

@@ -46,6 +46,7 @@ in
     slurp # screenshots: grim = capture, slurp = pick a region
     wl-clipboard # wl-copy / wl-paste
     cliphist # clipboard history (Super+.)
+    socat # listens on Hyprland's IPC socket (event-driven eww workspaces)
     playerctl # media keys
     brightnessctl # backlight (real on the Framework; no-op in the VM)
     networkmanagerapplet # nm-applet tray icon
