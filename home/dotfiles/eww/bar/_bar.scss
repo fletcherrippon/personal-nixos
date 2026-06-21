@@ -17,12 +17,12 @@
 
 .logo {
 	color: $accent;
-	min-height: 24px * 2;
-	min-width: 24px * 2;
+	min-height: $spacing * 8;
+	min-width: $spacing * 8;
 	padding: 0 ($spacing * 2);
 
 	label {
-		font-size: 24px * 2;
+		font-size: $spacing * 8;
 	}
 }
 
@@ -79,13 +79,13 @@
 
 .power {
 	color: $red;
-	min-height: 24px * 2;
-	min-width: 24px * 2;
-	font-size: 24px * 2;
+	min-height: $spacing * 8;
+	min-width: $spacing * 8;
+	font-size: $spacing * 8;
 	padding: 0 ($spacing * 2);
 
 	label {
-		font-size: 24px * 2;
+		font-size: $spacing * 8;
 	}
 
 	&:hover {
