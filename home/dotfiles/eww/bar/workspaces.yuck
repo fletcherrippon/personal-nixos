@@ -1,4 +1,4 @@
-(defpoll ws :interval "0.1s" :initial '[{"id": 1}]' `hyprctl workspaces -j`)
+(defpoll ws :interval "0.1s" :initial '[{"id": 1}]' `hyprctl workspaces -j | jq -c 'sort_by(.id)'`)
 (defpoll aws :interval "0.1s" :initial '{"id": 1}' `hyprctl activeworkspace -j`)
 
 (defwidget workspaces []
