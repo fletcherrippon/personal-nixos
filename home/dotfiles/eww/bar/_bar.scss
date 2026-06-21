@@ -10,86 +10,86 @@
 	color: $text;
 	padding: 0 ($spacing * 3);
 	font-size: $font_size;
-}
 
-.module {
-	padding: 0 ($spacing * 1.5);
-}
-
-.logo {
-	color: $accent;
-	min-height: $spacing * 6;
-	min-width: $spacing * 6;
-	padding: 0 ($spacing * 2);
-
-	label {
-		font-size: $spacing * 6;
-	}
-}
-
-.workspaces .ws {
-	background-color: $surface;
-	border-radius: $radius-full;
-	min-width: ($spacing * 4);
-	min-height: $spacing * 2;
-	padding: 0;
-	border: none;
-	box-shadow: none;
-	margin: 0 ($spacing * 0.5);
-	transition:
-		min-width 300ms cubic-bezier(0.2, 0, 0, 1),
-		background-color 250ms ease;
-
-	label {
-		font-size: 0;
+	.module {
+		padding: 0 ($spacing * 1.5);
 	}
 
-	// gap workspaces (don't exist yet): faint, so occupied dots stand out
-	// while positions still map to the real workspace numbers.
-	&.empty {
-		opacity: 0.5;
+	.logo {
+		color: $accent;
+		min-height: $spacing * 6;
+		min-width: $spacing * 6;
+		padding: 0 ($spacing * 2);
+
+		label {
+			font-size: $spacing * 6;
+		}
 	}
 
-	&.active {
-		background-color: $accent;
-		min-width: ($spacing * 12);
-		opacity: 1;
+	.workspaces .ws {
+		background-color: $surface;
+		border-radius: $radius-full;
+		min-width: ($spacing * 4);
+		min-height: $spacing * 2;
+		padding: 0;
+		border: none;
+		box-shadow: none;
+		margin: 0 ($spacing * 0.5);
+		transition:
+			min-width 200ms cubic-bezier(0.2, 0, 0, 1),
+			background-color 180ms ease;
+
+		label {
+			font-size: 0;
+		}
+
+		// gap workspaces (don't exist yet): faint, so occupied dots stand out
+		// while positions still map to the real workspace numbers.
+		&.empty {
+			opacity: 0.5;
+		}
+
+		&.active {
+			background-color: $accent;
+			min-width: ($spacing * 12);
+			opacity: 1;
+		}
 	}
-}
 
-.apps .app {
-	color: $subtext;
-	font-size: 16px;
-	padding: 0 $spacing;
-
-	&:hover {
-		color: $text;
-	}
-}
-
-.clock {
-	.time {
-		color: $text;
-		font-weight: bold;
-	}
-
-	.date {
+	.apps .app {
 		color: $subtext;
+		font-size: 16px;
+		padding: 0 $spacing;
+
+		&:hover {
+			color: $text;
+		}
 	}
-}
 
-.power {
-	color: $red;
-	min-height: $spacing * 6;
-	min-width: $spacing * 6;
-	font-size: $spacing * 6;
-	padding: 0 ($spacing * 2);
+	.clock {
+		.time {
+			color: $text;
+			font-weight: bold;
+		}
 
-	label {
+		.date {
+			color: $subtext;
+		}
+	}
+
+	.power {
+		color: $red;
+		min-height: $spacing * 6;
+		min-width: $spacing * 6;
 		font-size: $spacing * 6;
-	}
+		padding: 0 ($spacing * 2);
 
-	&:hover {
-		color: $text;
+		label {
+			font-size: $spacing * 6;
+		}
+
+		&:hover {
+			color: $text;
+		}
 	}
 }
