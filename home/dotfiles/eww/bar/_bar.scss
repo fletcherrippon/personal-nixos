@@ -1,0 +1,85 @@
+// Top bar modules. Colours/sizes come from theme.conf (run `theme`).
+// NOTE: keep comments ASCII-only. Non-ASCII in a /* */ comment makes Sass emit
+// `@charset "UTF-8";`, which GTK's CSS parser rejects. Use // (stripped) instead.
+
+// font-size lives on .bar (not *), so an empty pill label inherits the pill's
+// font-size: 0 and collapses to nothing -- letting min-height actually apply.
+.bar {
+	background-color: $bg;
+	color: $text;
+	padding: 0 ($spacing * 3);
+	font-size: $font_size;
+}
+
+.module {
+	padding: 0 ($spacing * 1.5);
+}
+
+.logo {
+	color: $accent;
+	min-height: 24px * 2;
+	min-width: 24px * 2;
+	font-size: 24px * 2;
+	padding: 0 ($spacing * 2);
+}
+
+.workspaces .ws {
+	background-color: $surface;
+	border-radius: $radius-full;
+	min-width: ($spacing * 4.5);
+	min-height: $spacing;
+	padding: 0;
+	border: none;
+	box-shadow: none;
+	margin: 0 ($spacing * 0.5);
+	transition:
+		min-width 300ms cubic-bezier(0.2, 0, 0, 1),
+		background-color 250ms ease;
+
+	label {
+		font-size: 0;
+	}
+
+	// gap workspaces (don't exist yet): faint, so occupied dots stand out
+	// while positions still map to the real workspace numbers.
+	&.empty {
+		opacity: 0.5;
+	}
+
+	&.active {
+		background-color: $accent;
+		min-width: ($spacing * 10.5);
+		opacity: 1;
+	}
+}
+
+.apps .app {
+	color: $subtext;
+	font-size: 16px;
+	padding: 0 $spacing;
+
+	&:hover {
+		color: $text;
+	}
+}
+
+.clock {
+	.time {
+		color: $text;
+		font-weight: bold;
+	}
+
+	.date {
+		color: $subtext;
+	}
+}
+
+.power {
+	color: $red;
+	font-size: 15px;
+	padding: 0 ($spacing * 1.5);
+
+	&:hover {
+		color: $text;
+	}
+}
