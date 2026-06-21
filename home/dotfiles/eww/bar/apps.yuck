@@ -1,5 +1,5 @@
 (defwidget apps []
   (box :class "module apps" :space-evenly false :spacing 12
-    (button :class "app" :onclick "firefox &" "")
-    (button :class "app" :onclick "term &" "")
-    (button :class "app" :onclick "discord &" "")))
+    (eventbox :cursor "pointer" (button :class "app" :onclick "firefox &" ""))
+    (eventbox :cursor "pointer" (button :class "app" :onclick "term &" ""))
+    (eventbox :cursor "pointer" (button :class "app" :onclick "discord &" ""))))

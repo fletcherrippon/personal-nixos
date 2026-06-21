@@ -1,2 +1,3 @@
 (defwidget launcher []
-  (button :class "module logo nf-linux-nixos" :onclick "fuzzel &" ""))
+  (eventbox :cursor "pointer"
+    (button :class "module logo nf-linux-nixos" :onclick "fuzzel &" "")))

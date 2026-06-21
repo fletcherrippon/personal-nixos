@@ -8,6 +8,7 @@
 (defwidget workspaces []
   (box :class "module workspaces" :valign "center" :space-evenly false :spacing 4
     (for i in ws
-      (button :class {aws.id == i.id ? "ws active" : (i.occupied ? "ws" : "ws empty")}
-              :valign "center"
-              :onclick "hyprctl dispatch workspace ${i.id}" ""))))
+      (eventbox :cursor "pointer"
+        (button :class {aws.id == i.id ? "ws active" : (i.occupied ? "ws" : "ws empty")}
+                :valign "center"
+                :onclick "hyprctl dispatch workspace ${i.id}" "")))))
