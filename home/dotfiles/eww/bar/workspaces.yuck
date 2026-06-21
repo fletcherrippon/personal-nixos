@@ -1,14 +1,18 @@
 ;; Event-driven (not polled): scripts/workspaces.sh listens on Hyprland's IPC
-;; socket and emits the gap-filled list only when something changes. Each item
-;; is { id, occupied, active } so this one var drives both the dots and the
-;; active highlight (no separate activeworkspace poll).
-(deflisten ws :initial '[{"id":1,"occupied":true,"active":true}]'
-  `bash $HOME/.config/eww/scripts/workspaces.sh`)
+;; socket and emits only when something changes.
+;;   ws  -> gap-filled [{id, occupied}] (changes on create/destroy)
+;;   aws -> active workspace id (changes on focus)
+;; They're kept separate so switching focus doesn't rebuild the list -- that's
+;; what lets the active pill animate its width (see scripts/workspaces.sh).
+(deflisten ws :initial '[{"id":1,"occupied":true}]'
+  `bash $HOME/.config/eww/scripts/workspaces.sh list`)
+(deflisten aws :initial '1'
+  `bash $HOME/.config/eww/scripts/workspaces.sh active`)
 
 (defwidget workspaces []
   (box :class "module workspaces" :valign "center" :space-evenly false :spacing 4
     (for i in ws
       (eventbox :cursor "pointer"
-        (button :class {i.active ? "ws active" : (i.occupied ? "ws" : "ws empty")}
+        (button :class {aws == i.id ? "ws active" : (i.occupied ? "ws" : "ws empty")}
                 :valign "center"
                 :onclick "hyprctl dispatch workspace ${i.id}" "")))))
