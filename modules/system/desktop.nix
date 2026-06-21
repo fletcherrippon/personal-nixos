@@ -32,4 +32,9 @@
 
   # Needed by the graphical auth agent we autostart inside Hyprland.
   security.polkit.enable = true;
+
+  # dconf backs the gsettings store that carries the dark-mode preference
+  # (org.gnome.desktop.interface color-scheme). Without a full DE, enable it
+  # here so the setting persists and the portal can read it.
+  programs.dconf.enable = true;
 }
