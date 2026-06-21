@@ -19,8 +19,11 @@
 	color: $accent;
 	min-height: 24px * 2;
 	min-width: 24px * 2;
-	font-size: 24px * 2;
 	padding: 0 ($spacing * 2);
+
+	label {
+		font-size: 24px * 2;
+	}
 }
 
 .workspaces .ws {
@@ -80,6 +83,10 @@
 	min-width: 24px * 2;
 	font-size: 24px * 2;
 	padding: 0 ($spacing * 2);
+
+	label {
+		font-size: 24px * 2;
+	}
 
 	&:hover {
 		color: $text;
