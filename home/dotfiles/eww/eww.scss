@@ -12,6 +12,11 @@
 	font-size: $font-size;
 }
 
+// Pointer cursor on every clickable button (GTK 3.20+ supports `cursor`).
+button {
+	cursor: pointer;
+}
+
 // Info card (toggle: Super+grave)
 .card {
 	background-color: $bg;
