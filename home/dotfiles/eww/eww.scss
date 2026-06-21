@@ -51,9 +51,16 @@
 		font-size: 0;
 	}
 
+	// gap workspaces (don't exist yet): faint, so occupied dots stand out
+	// while positions still map to the real workspace numbers.
+	&.empty {
+		opacity: 0.3;
+	}
+
 	&.active {
 		background-color: $accent;
 		min-width: 42px;
+		opacity: 1;
 	}
 }
 
