@@ -1,2 +1,2 @@
 (defwidget power []
-  (button :class "module power" :onclick "hyprctl dispatch exit" ""))
+  (button :class "module power nf-iec-power" :onclick "hyprctl dispatch exit" "⏻"))
