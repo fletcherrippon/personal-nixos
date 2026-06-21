@@ -1,26 +1,21 @@
-# anyrun — a Raycast-style launcher (Super+Space). Uses anyrun's own flake +
-# home-manager module so plugin .so paths are wired automatically. Unlike the
-# live-symlinked dotfiles (hypr/eww/...), anyrun's config + style are managed by
-# this module (regenerated on rebuild), since the plugin paths must be resolved
-# by Nix.
-{ inputs, pkgs, ... }:
-let
-  anyrun = inputs.anyrun.packages.${pkgs.system};
-in
+# anyrun — a Raycast-style launcher (Super+Space). Uses home-manager's built-in
+# programs.anyrun module (no flake input / no lock entry) with nixpkgs' anyrun,
+# which bundles every plugin in $out/lib and sets ANYRUN_PLUGINS -- so plugins
+# are referenced by bare .so name. Unlike the live-symlinked dotfiles
+# (hypr/eww/...), anyrun's config + style are Nix-managed (regenerated on rebuild).
+{ pkgs, ... }:
 {
-  imports = [ inputs.anyrun.homeManagerModules.default ];
-
   programs.anyrun = {
     enable = true;
-    package = anyrun.anyrun;
+    package = pkgs.anyrun;
 
     config = {
       plugins = [
-        anyrun.applications # launch apps
-        anyrun.rink # calculator + unit/currency conversion
-        anyrun.shell # run a shell command
-        anyrun.websearch # search the web
-        anyrun.symbols # emoji / unicode by name
+        "libapplications.so" # launch apps
+        "librink.so" # calculator + unit/currency conversion
+        "libshell.so" # run a shell command
+        "libwebsearch.so" # search the web
+        "libsymbols.so" # emoji / unicode by name
       ];
 
       width.fraction = 0.4;
