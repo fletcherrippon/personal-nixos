@@ -15,6 +15,7 @@
 // Info card (toggle: Super+grave)
 .card {
 	background-color: $bg;
+	opacity: $opacity;
 	border: $border solid $surface;
 	border-radius: 16px;
 	padding: ($spacing * 4.5);

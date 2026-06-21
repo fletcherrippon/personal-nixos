@@ -6,6 +6,7 @@
 // font-size: 0 and collapses to nothing -- letting min-height actually apply.
 .bar {
 	background-color: $bg;
+	opacity: $opacity;
 	color: $text;
 	padding: 0 ($spacing * 3);
 	font-size: $font_size;
