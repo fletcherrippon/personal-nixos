@@ -9,6 +9,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Raycast-style launcher (Super+Space). Provides the anyrun package, its
+    # plugins, and a home-manager module that wires plugin paths for us.
+    anyrun = {
+      url = "github:anyrun-org/anyrun";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # ── For the Framework laptop (uncomment when deploying) ────────────
     # nixos-hardware.url = "github:NixOS/nixos-hardware";
   };

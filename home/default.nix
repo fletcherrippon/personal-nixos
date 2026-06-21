@@ -15,6 +15,7 @@ in
     ./apps/shell.nix
     ./apps/theme.nix
     ./apps/term.nix # host-aware `term` command (software GL only on the VM)
+    ./apps/launcher.nix # anyrun launcher (Super+Space)
   ];
 
   home.username = "fletcher";
