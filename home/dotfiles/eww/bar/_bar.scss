@@ -30,8 +30,8 @@
 .workspaces .ws {
 	background-color: $surface;
 	border-radius: $radius-full;
-	min-width: ($spacing * 4.5);
-	min-height: $spacing;
+	min-width: ($spacing * 4);
+	min-height: $spacing * 2;
 	padding: 0;
 	border: none;
 	box-shadow: none;
@@ -52,7 +52,7 @@
 
 	&.active {
 		background-color: $accent;
-		min-width: ($spacing * 10.5);
+		min-width: ($spacing * 12);
 		opacity: 1;
 	}
 }
