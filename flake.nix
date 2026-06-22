@@ -9,6 +9,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Zen browser (not in nixpkgs). Provides aarch64 + x86_64 packages and a
+    # home-manager module (programs.zen-browser).
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # ── For the Framework laptop (uncomment when deploying) ────────────
     # nixos-hardware.url = "github:NixOS/nixos-hardware";
   };

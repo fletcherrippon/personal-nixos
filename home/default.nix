@@ -17,6 +17,7 @@ in
     ./apps/term.nix # host-aware `term` command (software GL only on the VM)
     ./apps/launcher.nix # anyrun launcher (Super+Space)
     ./apps/gtk.nix # system-wide dark mode (prefer-dark) + dark GTK theme
+    ./apps/browser.nix # zen browser, set as default
   ];
 
   home.username = "fletcher";
