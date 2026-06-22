@@ -18,7 +18,7 @@
         "libsymbols.so" # emoji / unicode by name
       ];
 
-      width.fraction = 0.4;
+      width.fraction = 0.3;
       y.absolute = 240;
       hideIcons = false;
       hidePluginInfo = false;
@@ -42,48 +42,52 @@
       }
 
       box.main {
-        padding: 8px;
-        margin: 12px;
+        padding: 6px;
+        margin: 8px;
         border-radius: 12px;
-        border: 2px solid @surface;
+        border: 1px solid @surface;
         background-color: @bg-color;
-        box-shadow: 0 0 12px black;
       }
 
+      /* search entry */
+      entry,
       text {
-        min-height: 36px;
+        min-height: 0;
+        margin-bottom: 4px;
         padding: 8px 10px;
+        border: none;
         border-radius: 8px;
         background-color: @surface;
         color: @fg-color;
+        font-size: 15px;
       }
 
-      .matches {
-        background: transparent;
-      }
+      .matches,
       list.plugin {
         background: transparent;
       }
 
+      /* result rows: transparent, subtle grey highlight when selected */
+      .match {
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: transparent;
+      }
+      .match:selected {
+        background-color: @surface;
+      }
+
       label.match {
         color: @fg-color;
+        font-size: 14px;
       }
       label.match.description {
-        font-size: 12px;
         color: @desc-color;
+        font-size: 12px;
       }
       label.plugin.info {
         color: @desc-color;
-      }
-
-      .match {
-        background: transparent;
-        border-radius: 8px;
-        padding: 4px 8px;
-      }
-      .match:selected {
-        background-color: @accent;
-        color: @bg-color;
+        font-size: 12px;
       }
     '';
   };
