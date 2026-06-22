@@ -5,8 +5,14 @@
 // font-size lives on .bar (not *), so an empty pill label inherits the pill's
 // font-size: 0 and collapses to nothing -- letting min-height actually apply.
 .bar {
-	background-color: $bg;
-	opacity: $opacity;
+	// Two stacked layers (background-color is drawn under background-image):
+	//   - solid base @ 50% (the constant bg)
+	//   - a vertical gradient of base on top: 33% opacity at the top -> 100% at
+	//     the bottom (more colour at the bottom).
+	// Gradients can't use the `opacity` property (it'd dim the text too), so the
+	// per-stop alpha is applied with SCSS rgba() -- $base itself stays pure hex.
+	background-color: rgba($base, 0.5);
+	background-image: linear-gradient(to bottom, rgba($base, 0.33), rgba($base, 1));
 	color: $text;
 	padding: 0 ($spacing * 3);
 	font-size: $font_size;
