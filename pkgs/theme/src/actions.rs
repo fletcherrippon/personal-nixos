@@ -23,27 +23,13 @@ fn num(vars: &[(String, Value)], key: &str, default: f64) -> f64 {
         .unwrap_or(default)
 }
 
-/// `WxH` of an image via ImageMagick, for sizing the gradient overlay.
-fn dims_of(path: &str) -> Option<String> {
-    let out = Command::new("magick")
-        .args(["identify", "-format", "%wx%h", path])
-        .output()
-        .ok()?;
-    if !out.status.success() {
-        return None;
-    }
-    let s = String::from_utf8_lossy(&out.stdout).trim().to_string();
-    (!s.is_empty()).then_some(s)
-}
-
 /// Recolour the source wallpaper to the palette and set it (awww).
 ///
 /// Mapping every pixel onto a small dark palette (lutgen alone) washes the image
-/// out to grey. To keep it vibrant while still themed + moody:
+/// out to grey. To keep it vibrant while still themed:
 ///   1. lutgen-recolour (luminance preserved)
 ///   2. blend ~50% back with the original so real colour returns
 ///   3. lift saturation + deepen contrast so subjects pop
-///   4. darken the top toward `base` with a gradient so backgrounds recede
 /// Falls back to the plain recolour if magick is unavailable, or a solid colour
 /// when no wallpaper is set.
 pub fn set_wallpaper(vars: &[(String, Value)], home: &str) {
@@ -100,29 +86,7 @@ pub fn set_wallpaper(vars: &[(String, Value)], home: &str) {
                 ],
             );
 
-            // 4. darken the top toward base so the background recedes
-            if toned_ok {
-                if let (Some(dims), Some(b)) = (dims_of(&out), &base) {
-                    // wall_darken% -> 0..255 alpha hex at the top, fading to 0 bottom
-                    let a = (num(vars, "wall_darken", 75.0).clamp(0.0, 100.0) * 2.55).round() as u8;
-                    let grad = format!("gradient:{b}{a:02X}-{b}00");
-                    run_ok(
-                        "magick",
-                        &[
-                            out.as_str(),
-                            "(",
-                            "-size",
-                            dims.as_str(),
-                            grad.as_str(),
-                            ")",
-                            "-composite",
-                            out.as_str(),
-                        ],
-                    );
-                }
-            }
-
-            // 5. set it (toned output, or the plain recolour if magick was missing)
+            // set it (toned output, or the plain recolour if magick was missing)
             let final_path = if toned_ok {
                 out.as_str()
             } else {
