@@ -1,5 +1,6 @@
 @import "theme"; // colours + sizes from theme.conf (run `theme`)
-@import "bar/bar"; // top bar modules (.bar, .logo, .workspaces, .clock, .power)
+@import "styles/bar"; // top bar modules (.bar, .logo, .workspaces, .clock, .power)
+@import "styles/card"; // info card / metrics
 
 // NOTE: keep comments ASCII-only. Non-ASCII in a /* */ comment makes Sass emit
 // `@charset "UTF-8";`, which GTK's CSS parser rejects. Use // (stripped) instead.
@@ -10,51 +11,4 @@
 	margin: 0;
 	font-family: $font;
 	font-size: $font-size;
-}
-
-// Info card (toggle: Super+grave)
-.card {
-	background-color: $bg;
-	opacity: $opacity;
-	border: $border solid $surface;
-	border-radius: 16px;
-	padding: ($spacing * 4.5);
-	color: $text;
-
-	.big-time {
-		font-size: 30px;
-		font-weight: bold;
-	}
-
-	.date {
-		font-size: 13px;
-		color: $subtext;
-	}
-}
-
-.metric-label {
-	font-size: 13px;
-	color: $subtext;
-}
-
-.metric-val {
-	font-size: 13px;
-	color: $text;
-}
-
-.metric-bar {
-	trough {
-		background-color: $surface;
-		border-radius: 8px;
-		min-height: ($spacing * 2);
-	}
-	highlight {
-		background-color: $accent;
-		border-radius: 8px;
-	}
-	slider {
-		background-color: transparent;
-		min-width: 0;
-		min-height: 0;
-	}
 }

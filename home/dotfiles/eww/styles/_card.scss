@@ -1,0 +1,46 @@
+// Info card (toggle: Super+grave) + metric meters.
+.card {
+	background-color: $bg;
+	opacity: $opacity;
+	border: $border solid $surface;
+	border-radius: 16px;
+	padding: ($spacing * 4.5);
+	color: $text;
+
+	.big-time {
+		font-size: 30px;
+		font-weight: bold;
+	}
+
+	.date {
+		font-size: 13px;
+		color: $subtext;
+	}
+}
+
+.metric-label {
+	font-size: 13px;
+	color: $subtext;
+}
+
+.metric-val {
+	font-size: 13px;
+	color: $text;
+}
+
+.metric-bar {
+	trough {
+		background-color: $surface;
+		border-radius: 8px;
+		min-height: ($spacing * 2);
+	}
+	highlight {
+		background-color: $accent;
+		border-radius: 8px;
+	}
+	slider {
+		background-color: transparent;
+		min-width: 0;
+		min-height: 0;
+	}
+}

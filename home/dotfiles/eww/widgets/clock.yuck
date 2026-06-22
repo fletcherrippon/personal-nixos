@@ -1,6 +1,4 @@
-(defpoll clock_time :interval "10s"   `date '+%H:%M'`)
-(defpoll clock_date :interval "3600s" `date '+%d %B'`)
-
+;; Clock module. Polls (clock_time, clock_date) live in vars/polls.yuck.
 (defwidget clock []
   (box :class "module clock" :space-evenly false :spacing 8
     (label :class "time" :text clock_time)

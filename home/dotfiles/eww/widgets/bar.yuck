@@ -1,9 +1,5 @@
-(include "./bar/launcher.yuck")
-(include "./bar/workspaces.yuck")
-(include "./bar/apps.yuck")
-(include "./bar/clock.yuck")
-(include "./bar/power.yuck")
-
+;; The top bar: assembles the module widgets (each defined in its own widgets/
+;; file and pulled in by eww.yuck).
 (defwidget bar []
   (centerbox :class "bar"
     (box :halign "start" :valign "center" :space-evenly false :spacing 10

@@ -1,0 +1,15 @@
+;; Info card (toggle: Super+`). A clock + CPU/RAM meters.
+(defwidget metric [label value]
+  (box :class "metric" :orientation "v" :space-evenly false :spacing 4
+    (box :orientation "h" :space-evenly false
+      (label :class "metric-label" :text label)
+      (label :class "metric-val" :hexpand true :halign "end" :text "${value}%"))
+    (scale :class "metric-bar" :value value :min 0 :max 100 :active false)))
+
+(defwidget card []
+  (box :class "card" :orientation "v" :space-evenly false :spacing 14
+    (box :class "card-clock" :orientation "v" :space-evenly false
+      (label :class "big-time" :text clock_time)
+      (label :class "date" :text clock_date))
+    (metric :label "CPU" :value {round(EWW_CPU.avg, 0)})
+    (metric :label "RAM" :value {round(EWW_RAM.used_mem_perc, 0)})))

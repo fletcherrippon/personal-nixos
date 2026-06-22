@@ -1,0 +1,11 @@
+;; Workspace dots. Variables (wsrange, wsstate) live in vars/listens.yuck.
+;; wsrange is the stable list we iterate; wsstate (active + occupied) is separate
+;; so focusing/occupying a workspace updates only wsstate -- the buttons are kept
+;; and the active-pill width transition animates (even on empty gap workspaces).
+(defwidget workspaces []
+  (box :class "module workspaces" :valign "center" :space-evenly false :spacing 4
+    (for i in wsrange
+      (eventbox :cursor "pointer"
+        (button :class {wsstate.active == i.id ? "ws active" : (matches(wsstate.occupied, " ${i.id} ") ? "ws" : "ws empty")}
+                :valign "center"
+                :onclick "hyprctl dispatch workspace ${i.id}" "")))))

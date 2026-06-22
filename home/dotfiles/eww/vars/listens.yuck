@@ -1,0 +1,8 @@
+;; Event-driven variables (deflisten) -- read a long-running script's stdout.
+;; Workspaces come off Hyprland's IPC socket via scripts/workspaces.sh. range and
+;; state are split on purpose (see widgets/workspaces.yuck) so focusing a gap
+;; workspace doesn't rebuild the buttons and kill the active-pill animation.
+(deflisten wsrange :initial '[{"id":1}]'
+  `bash $HOME/.config/eww/scripts/workspaces.sh range`)
+(deflisten wsstate :initial '{"active":1,"occupied":" 1 "}'
+  `bash $HOME/.config/eww/scripts/workspaces.sh state`)

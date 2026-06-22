@@ -1,0 +1,4 @@
+;; Polling variables (defpoll) -- run a script on an interval.
+;; Event-driven variables live in vars/listens.yuck.
+(defpoll clock_time :interval "10s"   `date '+%H:%M'`)
+(defpoll clock_date :interval "3600s" `date '+%d %B'`)
