@@ -3,11 +3,13 @@
 # Esc still closes it via anyrun's own keybind -- this just adds open/close on
 # the same shortcut (Super+Space).
 #
-# Match on 'bin/anyrun' rather than the process name: Nix wraps the binary, so
-# the running process is `.anyrun-wrapped`, but its argv[0] is `.../bin/anyrun`.
-# Matching the path also keeps this script from matching its own invocation.
-if pgrep -f 'bin/anyrun' >/dev/null; then
-  pkill -f 'bin/anyrun'
+# Match the cmdline 'anyrun': the Nix-wrapped process has comm `.anyrun-wrapped`
+# but argv[0] is plain `anyrun`. -f also catches `anyrun-provider`, so the whole
+# launcher tears down. This script's path has no "anyrun" in it, so pgrep/pkill
+# never match the toggle itself. Killing (not re-launching) avoids anyrun's
+# single-instance D-Bus panic when a second copy starts.
+if pgrep -f anyrun >/dev/null; then
+  pkill -f anyrun
 else
   anyrun
 fi
