@@ -1,39 +1,43 @@
 #!/usr/bin/env bash
-# Event-driven workspace data for eww, off Hyprland's IPC socket (.socket2.sock)
-# instead of polling -- updates the instant something changes, idle otherwise.
+# Event-driven workspace data for eww, off Hyprland's IPC socket (.socket2.sock).
 #
-#   workspaces.sh list    -> gap-filled [{id, occupied}], re-emit on create/destroy
-#   workspaces.sh active  -> active workspace id, re-emit on focus change
+#   workspaces.sh range  -> [{id}] for 1..max. The list to iterate. Changes ONLY
+#                           when max changes (re-emit on create/destroy/move).
+#   workspaces.sh state  -> {active, occupied} where occupied is a space-padded
+#                           list of occupied ids like " 1 3 " (re-emit on focus
+#                           and create/destroy/move).
 #
-# active is kept SEPARATE from the list on purpose: if it lived inside each item,
-# every focus change would alter the list and make eww recreate the buttons,
-# which kills the active-pill width transition. Keeping the list stable across
-# focus changes lets the CSS transition animate.
+# range and state are deliberately SEPARATE: focusing or occupying a workspace
+# must not change the iterated `range` list, or eww rebuilds the buttons and the
+# active-pill width transition never plays. (Hyprland creates a gap workspace on
+# focus, which is exactly the case that used to break the animation.)
 
 sock="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
 
-list() {
-  hyprctl workspaces -j | jq -c '
-    [.[].id | select(. > 0)] as $ids
-    | (($ids | max) // 1) as $m
-    | [range(1; $m + 1) as $i | { id: $i, occupied: (($ids | index($i)) != null) }]'
+range() {
+  hyprctl workspaces -j | jq -c '(([.[].id|select(.>0)]|max)//1) as $m | [range(1;$m+1)|{id:.}]'
 }
-active() { hyprctl activeworkspace -j | jq -c '.id'; }
+state() {
+  local active occ
+  active=$(hyprctl activeworkspace -j | jq '.id')
+  occ=$(hyprctl workspaces -j | jq -r '[.[].id|select(.>0)]|map(tostring)|join(" ")')
+  printf '{"active":%s,"occupied":" %s "}\n' "$active" "$occ"
+}
 
 case "$1" in
-  list)
-    list
+  range)
+    range
     socat -u UNIX-CONNECT:"$sock" - | while read -r line; do
       case "$line" in
-        createworkspace*|destroyworkspace*|moveworkspace*|renameworkspace*) list ;;
+        createworkspace*|destroyworkspace*|moveworkspace*) range ;;
       esac
     done
     ;;
-  active)
-    active
+  state)
+    state
     socat -u UNIX-CONNECT:"$sock" - | while read -r line; do
       case "$line" in
-        workspace*|focusedmon*) active ;;
+        workspace*|focusedmon*|createworkspace*|destroyworkspace*|moveworkspace*) state ;;
       esac
     done
     ;;

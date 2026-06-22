@@ -1,18 +1,18 @@
-;; Event-driven (not polled): scripts/workspaces.sh listens on Hyprland's IPC
-;; socket and emits only when something changes.
-;;   ws  -> gap-filled [{id, occupied}] (changes on create/destroy)
-;;   aws -> active workspace id (changes on focus)
-;; They're kept separate so switching focus doesn't rebuild the list -- that's
-;; what lets the active pill animate its width (see scripts/workspaces.sh).
-(deflisten ws :initial '[{"id":1,"occupied":true}]'
-  `bash $HOME/.config/eww/scripts/workspaces.sh list`)
-(deflisten aws :initial '1'
-  `bash $HOME/.config/eww/scripts/workspaces.sh active`)
+;; Event-driven workspaces (Hyprland IPC socket; see scripts/workspaces.sh).
+;; Two listeners kept SEPARATE so focusing/occupying a workspace never rebuilds
+;; the iterated list -- that's what lets the active pill animate its width, even
+;; when moving to an empty gap workspace (which Hyprland creates on focus).
+;;   wsrange -> [{id}] for 1..max  (stable unless max changes)
+;;   wsstate -> {active, occupied} occupied is space-padded ids e.g. " 1 3 "
+(deflisten wsrange :initial '[{"id":1}]'
+  `bash $HOME/.config/eww/scripts/workspaces.sh range`)
+(deflisten wsstate :initial '{"active":1,"occupied":" 1 "}'
+  `bash $HOME/.config/eww/scripts/workspaces.sh state`)
 
 (defwidget workspaces []
   (box :class "module workspaces" :valign "center" :space-evenly false :spacing 4
-    (for i in ws
+    (for i in wsrange
       (eventbox :cursor "pointer"
-        (button :class {aws == i.id ? "ws active" : (i.occupied ? "ws" : "ws empty")}
+        (button :class {wsstate.active == i.id ? "ws active" : (matches(wsstate.occupied, " ${i.id} ") ? "ws" : "ws empty")}
                 :valign "center"
                 :onclick "hyprctl dispatch workspace ${i.id}" "")))))
