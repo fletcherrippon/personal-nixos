@@ -40,6 +40,7 @@ in
     mako # notification popups
     awww # wallpaper daemon (swww renamed; CPU-based, VM-safe)
     lutgen # recolours a wallpaper to match the palette
+    imagemagick # composites the themed wallpaper (blend/tone/gradient)
     hyprlock # lock screen
     hypridle # auto-lock / screen-off when idle
     hyprpolkitagent # graphical password prompts (polkit)
