@@ -12,6 +12,17 @@ fn run_ok(cmd: &str, args: &[&str]) -> bool {
         .unwrap_or(false)
 }
 
+/// A numeric tuning var from theme.conf (Num or Len), falling back to `default`.
+fn num(vars: &[(String, Value)], key: &str, default: f64) -> f64 {
+    vars.iter()
+        .find(|(k, _)| k == key)
+        .and_then(|(_, v)| match v {
+            Value::Num(n) | Value::Len(n, _) => Some(*n),
+            _ => None,
+        })
+        .unwrap_or(default)
+}
+
 /// `WxH` of an image via ImageMagick, for sizing the gradient overlay.
 fn dims_of(path: &str) -> Option<String> {
     let out = Command::new("magick")
@@ -64,6 +75,13 @@ pub fn set_wallpaper(vars: &[(String, Value)], home: &str) {
             }
 
             // 2. blend back with the original (keep colour) + 3. saturation/contrast
+            //    Tunable via theme.conf (wall_*); see comments there.
+            let blend = format!("compose:args={}", num(vars, "wall_blend", 40.0) as i64);
+            let modulate = format!(
+                "{},{},100",
+                num(vars, "wall_brightness", 105.0) as i64,
+                num(vars, "wall_saturation", 150.0) as i64,
+            );
             let toned_ok = run_ok(
                 "magick",
                 &[
@@ -72,12 +90,12 @@ pub fn set_wallpaper(vars: &[(String, Value)], home: &str) {
                     "-compose",
                     "blend",
                     "-define",
-                    "compose:args=50", // 50% themed + 50% original
+                    blend.as_str(),
                     "-composite",
                     "-modulate",
-                    "98,125,100", // brightness, saturation, hue (%)
+                    modulate.as_str(), // brightness, saturation, hue (%)
                     "-sigmoidal-contrast",
-                    "3x55%",
+                    "3x50%",
                     out.as_str(),
                 ],
             );
@@ -85,7 +103,9 @@ pub fn set_wallpaper(vars: &[(String, Value)], home: &str) {
             // 4. darken the top toward base so the background recedes
             if toned_ok {
                 if let (Some(dims), Some(b)) = (dims_of(&out), &base) {
-                    let grad = format!("gradient:{b}C0-{b}00"); // ~75% at top -> 0 at bottom
+                    // wall_darken% -> 0..255 alpha hex at the top, fading to 0 bottom
+                    let a = (num(vars, "wall_darken", 75.0).clamp(0.0, 100.0) * 2.55).round() as u8;
+                    let grad = format!("gradient:{b}{a:02X}-{b}00");
                     run_ok(
                         "magick",
                         &[
