@@ -16,6 +16,8 @@
         "libshell.so" # run a shell command
         "libwebsearch.so" # search the web
         "libsymbols.so" # emoji / unicode by name
+        "libdictionary.so" # word definitions
+        "libtranslate.so" # translate text
       ];
 
       width.fraction = 0.3;

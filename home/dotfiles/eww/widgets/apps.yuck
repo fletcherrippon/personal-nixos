@@ -1,5 +1,14 @@
+;; Quick-launch buttons using the real application icons (GTK icon-name lookup
+;; via eww's image widget). Icon names come from each app's installed .desktop:
+;; zen-browser, com.mitchellh.ghostty, zed.
 (defwidget apps []
   (box :class "module apps" :space-evenly false :spacing 12
-    (eventbox :cursor "pointer" (button :class "app" :onclick "zen-beta &" ""))
-    (eventbox :cursor "pointer" (button :class "app" :onclick "term &" ""))
-    (eventbox :cursor "pointer" (button :class "app" :onclick "discord &" ""))))
+    (eventbox :cursor "pointer"
+      (button :class "app" :onclick "zen-beta &"
+        (image :icon "zen-browser" :icon-size "large-toolbar")))
+    (eventbox :cursor "pointer"
+      (button :class "app" :onclick "term &"
+        (image :icon "com.mitchellh.ghostty" :icon-size "large-toolbar")))
+    (eventbox :cursor "pointer"
+      (button :class "app" :onclick "zeditor &"
+        (image :icon "zed" :icon-size "large-toolbar")))))
